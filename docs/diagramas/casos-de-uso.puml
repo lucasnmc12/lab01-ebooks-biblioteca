@@ -4,8 +4,8 @@
 ' Lab01S01 - Diagrama de Casos de Uso
 '
 ' Responsaveis:
-'   Lucas Nogueira ..... UC07, UC08, UC09, UC10, UC11, UC12 (Bibliotecario)
-'   Pedro Resende ...... UC01, UC02, UC03, UC04, UC05, UC06 (Aluno / acesso)
+'   Lucas Nogueira ..... UC07, UC09 (Bibliotecario)
+'   Pedro Resende ...... UC01, UC02, UC03, UC04 (Aluno / acesso)
 ' ---------------------------------------------------------------
 
 left to right direction
@@ -57,7 +57,4 @@ UC01 <.. UC03 : <<include>>
 UC01 <.. UC04 : <<include>>
 UC01 <.. UC07 : <<include>>
 UC01 <.. UC09 : <<include>>
-
-' Extend: a remocao do catalogo so acontece quando o eBook nao alcanca
-' o minimo de 3 alunos ao final do periodo de acesso.
 @enduml
