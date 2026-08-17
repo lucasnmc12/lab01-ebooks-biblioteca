@@ -19,14 +19,8 @@ skinparam usecase {
   BorderColor Black
 }
 
-' Aluno e Bibliotecario sao especializacoes de Usuario porque a descricao
-' atribui senha e login a todos os usuarios do sistema, e nao a um perfil so.
-actor "Usuário" as Usuario
 actor "Aluno" as Aluno
 actor "Bibliotecário" as Bibliotecario
-
-Aluno --|> Usuario
-Bibliotecario --|> Usuario
 
 rectangle "Sistema de Gestão de eBooks" {
 
@@ -55,7 +49,8 @@ rectangle "Sistema de Gestão de eBooks" {
 ' Ator secundario: e notificado pelo sistema, nao inicia nenhum caso de uso.
 actor "Sistema de Estatísticas de Uso" as Estatisticas
 
-Usuario --> UC01
+Aluno --> UC01
+Bibliotecario --> UC01
 
 Aluno --> UC02
 Aluno --> UC03
