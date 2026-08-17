@@ -36,7 +36,6 @@ rectangle "Sistema de Gestão de eBooks" {
   package "Gestão do acervo" {
     usecase "Cadastrar eBook" as UC07
     usecase "Consultar alunos com um eBook" as UC09
-    usecase "Avaliar renovação do catálogo" as UC11
     usecase "Remover eBook do catálogo" as UC12
   }
 }
@@ -50,7 +49,6 @@ Aluno --> UC04
 
 Bibliotecario --> UC07
 Bibliotecario --> UC09
-Bibliotecario --> UC11
 
 ' Login e incluido por todos os casos de uso que exigem usuario autenticado.
 ' A seta esta escrita como "UC01 <.. UCxx" apenas para o PlantUML posicionar
@@ -60,9 +58,7 @@ UC01 <.. UC03 : <<include>>
 UC01 <.. UC04 : <<include>>
 UC01 <.. UC07 : <<include>>
 UC01 <.. UC09 : <<include>>
-UC01 <.. UC11 : <<include>>
 
 ' Extend: a remocao do catalogo so acontece quando o eBook nao alcanca
 ' o minimo de 3 alunos ao final do periodo de acesso.
-UC12 ..> UC11 : <<extend>>
 @enduml
