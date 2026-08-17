@@ -1,12 +1,11 @@
 @startuml casos_de_uso_ebooks
-
 ' ---------------------------------------------------------------
 ' Sistema de Gestao de eBooks da Biblioteca Universitaria
 ' Lab01S01 - Diagrama de Casos de Uso
 '
 ' Responsaveis:
-'   Lucas Nogueira ..... UC07, UC08, UC09, UC10, UC11, UC12 (Bibliotecario)
-'   Pedro Resende ...... UC01, UC02, UC03, UC04, UC05, UC06 (Aluno / acesso)
+'   Lucas Nogueira ..... UC07, UC09 (Bibliotecario)
+'   Pedro Resende ...... UC01, UC02, UC03, UC04 (Aluno / acesso)
 ' ---------------------------------------------------------------
 
 left to right direction
@@ -19,14 +18,8 @@ skinparam usecase {
   BorderColor Black
 }
 
-' Aluno e Bibliotecario sao especializacoes de Usuario porque a descricao
-' atribui senha e login a todos os usuarios do sistema, e nao a um perfil so.
-actor "Usuário" as Usuario
 actor "Aluno" as Aluno
 actor "Bibliotecário" as Bibliotecario
-
-Aluno --|> Usuario
-Bibliotecario --|> Usuario
 
 rectangle "Sistema de Gestão de eBooks" {
 
@@ -38,24 +31,16 @@ rectangle "Sistema de Gestão de eBooks" {
     usecase "Adicionar eBook à estante" as UC02
     usecase "Remover eBook da estante" as UC03
     usecase "Consultar estante pessoal" as UC04
-    usecase "Verificar disponibilidade de licença" as UC05
-    usecase "Notificar estatísticas de uso" as UC06
   }
 
   package "Gestão do acervo" {
     usecase "Cadastrar eBook" as UC07
-    usecase "Definir licença de uso" as UC08
     usecase "Consultar alunos com um eBook" as UC09
-    usecase "Manter período de acesso" as UC10
-    usecase "Avaliar renovação do catálogo" as UC11
-    usecase "Remover eBook do catálogo" as UC12
   }
 }
 
-' Ator secundario: e notificado pelo sistema, nao inicia nenhum caso de uso.
-actor "Sistema de Estatísticas de Uso" as Estatisticas
-
-Usuario --> UC01
+Aluno --> UC01
+Bibliotecario --> UC01
 
 Aluno --> UC02
 Aluno --> UC03
@@ -63,10 +48,6 @@ Aluno --> UC04
 
 Bibliotecario --> UC07
 Bibliotecario --> UC09
-Bibliotecario --> UC10
-Bibliotecario --> UC11
-
-UC06 --> Estatisticas
 
 ' Login e incluido por todos os casos de uso que exigem usuario autenticado.
 ' A seta esta escrita como "UC01 <.. UCxx" apenas para o PlantUML posicionar
@@ -76,15 +57,4 @@ UC01 <.. UC03 : <<include>>
 UC01 <.. UC04 : <<include>>
 UC01 <.. UC07 : <<include>>
 UC01 <.. UC09 : <<include>>
-UC01 <.. UC10 : <<include>>
-UC01 <.. UC11 : <<include>>
-
-UC02 ..> UC05 : <<include>>
-UC02 ..> UC06 : <<include>>
-UC07 ..> UC08 : <<include>>
-
-' Extend: a remocao do catalogo so acontece quando o eBook nao alcanca
-' o minimo de 3 alunos ao final do periodo de acesso.
-UC12 ..> UC11 : <<extend>>
-
 @enduml
