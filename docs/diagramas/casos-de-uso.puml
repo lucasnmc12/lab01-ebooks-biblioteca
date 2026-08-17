@@ -36,7 +36,6 @@ rectangle "Sistema de Gestão de eBooks" {
   package "Gestão do acervo" {
     usecase "Cadastrar eBook" as UC07
     usecase "Consultar alunos com um eBook" as UC09
-    usecase "Remover eBook do catálogo" as UC12
   }
 }
 
