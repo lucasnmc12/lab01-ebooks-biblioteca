@@ -20,5 +20,4 @@ Diagrama casos de uso:
 Histórias de Usuário:
 
 1. Exclusão das histórias de usuário HU5, HU6, HU8, HU10, HU11, e HU12 referentes aos casos de uso excluídos do diagrama de casos de uso.
-2. Preferi fazer as histórias de usuário da forma que está no roteiro da sprint, para seguir melhor o roteiro.
-3. A princípio eu iria fazer as histórias de usuário como está no roteiro da sprint, apenas um parágrafo. Porém adicionei os critérios de aceitação para ficar da mesma forma que as HUs do outro integrante do grupo.
+2. A princípio eu iria fazer as histórias de usuário como está no roteiro da sprint, apenas um parágrafo. Porém adicionei os critérios de aceitação para ficar da mesma forma que as HUs do outro integrante do grupo.
