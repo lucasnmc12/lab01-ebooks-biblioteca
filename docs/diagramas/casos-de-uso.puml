@@ -1,5 +1,4 @@
 @startuml casos_de_uso_ebooks
-
 ' ---------------------------------------------------------------
 ' Sistema de Gestao de eBooks da Biblioteca Universitaria
 ' Lab01S01 - Diagrama de Casos de Uso
@@ -32,12 +31,10 @@ rectangle "Sistema de Gestão de eBooks" {
     usecase "Adicionar eBook à estante" as UC02
     usecase "Remover eBook da estante" as UC03
     usecase "Consultar estante pessoal" as UC04
-    usecase "Verificar disponibilidade de licença" as UC05
   }
 
   package "Gestão do acervo" {
     usecase "Cadastrar eBook" as UC07
-    usecase "Definir licença de uso" as UC08
     usecase "Consultar alunos com um eBook" as UC09
     usecase "Avaliar renovação do catálogo" as UC11
     usecase "Remover eBook do catálogo" as UC12
@@ -65,11 +62,7 @@ UC01 <.. UC07 : <<include>>
 UC01 <.. UC09 : <<include>>
 UC01 <.. UC11 : <<include>>
 
-UC02 ..> UC05 : <<include>>
-UC07 ..> UC08 : <<include>>
-
 ' Extend: a remocao do catalogo so acontece quando o eBook nao alcanca
 ' o minimo de 3 alunos ao final do periodo de acesso.
 UC12 ..> UC11 : <<extend>>
-
 @enduml
