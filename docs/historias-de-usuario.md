@@ -6,8 +6,10 @@ Cada história corresponde a um caso de uso do [diagrama de casos de uso](diagra
 
 | Histórias   | Casos de uso | Responsável    |
 | ----------- | ------------ | -------------- |
-| HU01 a HU04 | UC01 a UC04  | Pedro Resende  |
-| HU07 e HU09 | UC07 e UC09  | Lucas Nogueira |
+| HU01 a HU06 | UC01 a UC06  | Pedro Resende  |
+| HU07 a HU12 | UC07 a UC12  | Lucas Nogueira |
+
+HU05 e HU06 estavam sem texto e foram redigidas por Lucas Nogueira para que nenhum caso de uso do diagrama ficasse sem história. A responsabilidade pela revisão continua sendo do Pedro.
 
 ---
 
@@ -41,6 +43,28 @@ Critérios de aceitação:
 
 Como um aluno, eu quero consultar a minha estante pessoal, para que eu possa verificar os eBooks na estante e acessar um deles para leitura.
 
+### HU05, Verificar disponibilidade de licença (UC05)
+
+Como aluno, eu quero saber se ainda há licença livre para o eBook no momento em que tento adicioná-lo, para não contar com um título que o sistema vai acabar bloqueando.
+
+Critérios de aceitação:
+
+- A verificação acontece antes de o eBook entrar na estante.
+- O título é liberado enquanto o número de acessos simultâneos estiver abaixo de 60.
+- Atingido o limite, o acesso é recusado e o aluno recebe o aviso de indisponibilidade.
+- Liberada uma das licenças em uso, o título volta a ficar disponível para novos acessos.
+
+### HU06, Notificar estatísticas de uso (UC06)
+
+Como bibliotecário, eu quero que o sistema de estatísticas de uso seja avisado toda vez que um aluno adiciona um eBook à estante, para que a biblioteca acompanhe quais títulos são mais procurados.
+
+Critérios de aceitação:
+
+- A notificação parte do próprio sistema, sem nenhuma ação do aluno.
+- Cada adição gera uma notificação identificando o título adicionado.
+- Remover um eBook da estante não gera notificação.
+- As estatísticas são consultadas no sistema externo, não no sistema de gestão de eBooks.
+
 ## Gestão do acervo
 
 ### HU07, Cadastrar eBook (UC07)
@@ -55,21 +79,6 @@ Critérios de aceitação:
 - Ao final do cadastro o sistema exige a definição da licença de uso (HU08).
 - Um eBook recém-cadastrado passa a aparecer no catálogo do semestre.
 
-### HU09, Consultar alunos com um eBook (UC09)
-
-Como bibliotecário, eu quero ver quais alunos têm um determinado eBook na estante, para acompanhar o uso do acervo e embasar a decisão de renovação da licença.
-
-Critérios de aceitação:
-
-- A consulta é feita a partir do título do eBook.
-- O resultado lista os alunos que estão com aquele eBook na estante no período corrente.
-- O total de alunos aparece junto da lista, já que esse número define a renovação (mínimo de 3).
-- Um eBook sem nenhum aluno retorna lista vazia, não erro.
-
----
-
-## HUs de UCs excluídos
-
 ### HU08, Definir licença de uso (UC08)
 
 Como bibliotecário, eu quero definir quantos alunos podem acessar um eBook ao mesmo tempo, para que a biblioteca respeite o contrato de licenciamento do título.
@@ -80,6 +89,17 @@ Critérios de aceitação:
 - O limite não pode ultrapassar 60 acessos simultâneos.
 - Um valor fora dessa faixa é recusado, com mensagem indicando o limite permitido.
 - O limite pode ser alterado depois do cadastro e passa a valer para os próximos acessos.
+
+### HU09, Consultar alunos com um eBook (UC09)
+
+Como bibliotecário, eu quero ver quais alunos têm um determinado eBook na estante, para acompanhar o uso do acervo e embasar a decisão de renovação da licença.
+
+Critérios de aceitação:
+
+- A consulta é feita a partir do título do eBook.
+- O resultado lista os alunos que estão com aquele eBook na estante no período corrente.
+- O total de alunos aparece junto da lista, já que esse número define a renovação (mínimo de 3).
+- Um eBook sem nenhum aluno retorna lista vazia, não erro.
 
 ### HU10, Manter período de acesso (UC10)
 
