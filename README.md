@@ -31,8 +31,8 @@ Os bibliotecários também consultam quais alunos estão com um determinado eBoo
 
 | Integrante | Casos de uso | Histórias |
 | --- | --- | --- |
-| Lucas Nogueira | UC07 Cadastrar eBook, UC09 Consultar alunos com um eBook | HU07 e HU09 |
-| Pedro Resende | UC01 Realizar login, UC02 Adicionar eBook à estante, UC03 Remover eBook da estante, UC04 Consultar estante pessoal | HU01 a HU04 |
+| Lucas Nogueira | UC07 Cadastrar eBook, UC08 Definir licença de uso, UC09 Consultar alunos com um eBook, UC10 Manter período de acesso, UC11 Avaliar renovação do catálogo, UC12 Remover eBook do catálogo | HU07 a HU12 |
+| Pedro Resende | UC01 Realizar login, UC02 Adicionar eBook à estante, UC03 Remover eBook da estante, UC04 Consultar estante pessoal, UC05 Verificar disponibilidade de licença, UC06 Notificar estatísticas de uso | HU01 a HU06 |
 
 O andamento das tarefas é acompanhado no board do GitHub Projects deste repositório.
 
