@@ -1,0 +1,151 @@
+@startuml
+
+abstract class Usuario {
+    -id: String
+    -nome: String
+    -senha: String
+    +autenticarUsuario(senhaDigitada: String): boolean
+}
+
+class Aluno {
+    -matricula: String
+    -disciplinasEmCurso: List<Disciplina>
+    -estantePessoal: Estante
+    +adicionarEbookNaEstante(ebook: Ebook): void
+    +removerEbookDaEstante(ebook: Ebook): void
+    +consultarEstante(): void
+}
+
+class Bibliotecario {
+    -registroFuncional: String
+    +cadastrarEbook(titulo: String, editora: String, formato: FormatoArquivo, categoria: String, limiteAcessosSimultaneos: int): Ebook
+    +definirLicenca(ebook: Ebook, limite: int): void
+    +removerEbook(ebook: Ebook): void
+    +consultarAlunosComEbook(alunos: List<Aluno>, ebook: Ebook): List<Aluno>
+    +abrirPeriodoAcesso(inicio: Date, fim: Date): void
+    +encerrarPeriodoAcesso(periodo: PeriodoAcesso): void
+}
+
+class Ebook {
+    -id: String
+    -titulo: String
+    -editora: String
+    -formato: FormatoArquivo
+    -categoria: Categoria
+    -licenca: Licenca
+    -statusRenovacao: StatusRenovacao
+    +estaDisponivel(): boolean
+}
+
+class Licenca {
+    -limiteAcessosSimultaneos: int
+    -acessosAtivos: int
+    +estaDisponivel(): boolean
+    +adicionarAcesso(): boolean
+    +liberarAcesso(): void
+    +definirLimiteAcessos(limite: int): void
+}
+
+class Estante {
+    -ebooksObrigatorios: List<Ebook>
+    -ebooksLivres: List<Ebook>
+    +adicionarEbookObrigatorio(ebook: Ebook): void
+    +adicionarEbookLivre(ebook: Ebook): void
+    +removerEbook(ebook: Ebook): void
+    +listarEbooksNaEstante(): List<Ebook>
+}
+
+class Disciplina {
+    -id: String
+    -nome: String
+    +ebooksIndicados: List<Ebook>
+    +adicionarEbookIndicado(ebook: Ebook): void
+    +removerEbookIndicado(ebook: Ebook): void
+}
+
+class Catalogo {
+    -ebooks: List<Ebook>
+    +adicionarEbook(ebook: Ebook): void
+    +removerEbook(ebook: Ebook): void
+}
+
+enum FormatoArquivo {
+    PDF
+    EPUB
+}
+
+enum Categoria {
+    LITERATURA
+    TECNICO
+    PERIODICO
+}
+
+enum StatusRenovacao {
+    PENDENTE
+    RENOVAR
+    NAO_RENOVAR
+}
+
+class SistemaEstatisticasUso <<external>> {
+    +registrarAdicao(aluno: Aluno, ebook: Ebook): void
+}
+
+class PeriodoAcesso {
+    -inicio: Date
+    -Fim: Date
+    +estaAberto(data: Date): boolean
+    +encerrar(): void
+}
+
+class SistemaGestaoEbooks {
+    -catalogo: Catalogo
+    -alunos: List<Aluno>
+    -bibliotecarios: List<Bibliotecario>
+    -disciplinas: List<Disciplina>
+    -periodosAcesso: List<PeriodoAcesso>
+    +avaliarRenovacao(periodo: PeriodoAcesso): void
+    +removerEbookNaoRenovado(ebook: Ebook): void
+}
+
+class AdicaoEbook {
+    -data: Date
+    -ebook: Ebook
+    -aluno: Aluno
+    -periodo: PeriodoAcesso
+}
+
+SistemaGestaoEbooks "1" *-- "0..*" Aluno
+SistemaGestaoEbooks "1" *-- "0..*" Bibliotecario
+SistemaGestaoEbooks "1" *-- "0..*" Disciplina
+SistemaGestaoEbooks "1" *-- "0..*" PeriodoAcesso
+SistemaGestaoEbooks "1" *-- "1" Catalogo
+
+SistemaGestaoEbooks "1" *-- "0..*" AdicaoEbook
+
+AdicaoEbook "*" --> "1" Aluno
+AdicaoEbook "*" --> "1" Ebook
+AdicaoEbook "*" --> "1" PeriodoAcesso
+
+Usuario <|-- Aluno
+Usuario <|-- Bibliotecario
+
+Aluno "1" *-- "1" Estante
+Estante "0..*" o-- "0..6" Ebook : contém
+
+Bibliotecario "0..*" -- "1" Catalogo : gerencia
+
+Ebook "1" *-- "1" Licenca
+
+Disciplina "0..*" --> "0..*" Ebook : indica
+
+Catalogo "1" o-- "0..*" Ebook : disponibiliza
+
+Aluno "0..*" --> "0..*" Disciplina : cursa
+
+Aluno .. SistemaEstatisticasUso
+
+Ebook --> FormatoArquivo
+Ebook --> Categoria
+Ebook -- StatusRenovacao
+
+@enduml
