@@ -1,6 +1,6 @@
 # Contribuições — Lucas Nogueira
 
-## Semana 1 (Sprint 2, Lab01S02)
+## Semana 2 (Sprint 2, Lab01S02)
 
 ### Contribuição
 
