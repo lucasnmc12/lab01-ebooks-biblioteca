@@ -35,3 +35,41 @@ Alinhar a restauração com o Pedro antes de mesclar, levar os três pontos em a
 ### Nota de transparência sobre uso de IA
 
 Usei o Claude, da Anthropic, como apoio nesta sprint. A ferramenta me ajudou a levantar e comparar os commits das duas versões do diagrama, a aplicar a restauração no repositório e a revisar a redação deste documento e do arquivo de histórias. A decisão de restaurar cada caso de uso, os argumentos registrados acima e os pontos que ficaram em aberto são meus, e sei defender cada um deles.
+
+---
+
+## Semana 2 (Sprint 2, Lab01S02)
+
+### Contribuição
+
+Assumi o bloco do acervo no diagrama de classes: `Bibliotecario`, `Catalogo`, `Ebook`, `Licenca`, `PeriodoAcesso`, `CalendarioAcademico`, `RegistroDeUso`, `AdicaoEbook` e os três enums. O Pedro tinha modelado o diagrama inteiro e registrou na contribuição dele que travou num ponto: não conseguiu cobrir os casos de uso 10, 11 e 12 sem criar a classe `SistemaGestaoEbooks`, que ele mesmo chamou de God Class. Peguei esse problema.
+
+Também criei o projeto Java em `src/br/edu/pucminas/biblioteca/modelo/`, com as quinze classes do diagrama, cada uma com atributos privados, construtor e stub dos métodos. O projeto compila.
+
+### Decisões
+
+Desfiz a `SistemaGestaoEbooks` aplicando o princípio do especialista na informação: a responsabilidade vai para a classe que já detém os dados necessários para cumpri-la. O sintoma da God Class era ela ter composição com cinco outras classes e ainda executar a regra de renovação, ou seja, mudaria por três motivos diferentes.
+
+`avaliarRenovacao()` e `removerNaoRenovados()` foram para o `Catalogo`, que é quem tem a lista de eBooks do semestre. A regra dos 3 alunos virou a constante `MINIMO_ALUNOS_RENOVACAO` dentro dele, em vez de ficar espalhada como número solto.
+
+A contagem de alunos foi para o `RegistroDeUso`, que reúne as `AdicaoEbook` e portanto é a única classe capaz de responder quantos alunos distintos ficaram com um título num período. De quebra, esse mesmo registro responde o UC09, consultar quais alunos estão com um eBook, que é um caso de uso meu desde a Sprint 1 e que antes não tinha onde morar.
+
+Criei o `CalendarioAcademico` para guardar os períodos de acesso. Sem ele, a lista de períodos ficava na God Class e não havia como garantir o critério da HU10, de que não existem dois períodos abertos ao mesmo tempo. Com a lista concentrada numa classe só, essa verificação tem casa.
+
+As listas de alunos, bibliotecários e disciplinas que estavam na God Class eu simplesmente removi. Elas não são modelagem de domínio, são armazenamento, e o roteiro pede para deixar infraestrutura de fora nesta sprint. Na Sprint 3 elas voltam como persistência em arquivo.
+
+Corrigi a dependência das estatísticas de uso. Estava saindo do `Aluno`, e a descrição do sistema diz que quem notifica o sistema de estatísticas é o sistema de gestão. Passou a sair do `RegistroDeUso`, que é quem efetivamente registra a adição, com o estereótipo `<<notifica>>`.
+
+Troquei `Date` por `LocalDate`. `java.util.Date` é mutável e tem boa parte da API obsoleta; `LocalDate` representa data de calendário, que é exatamente o caso dos períodos de acesso.
+
+Mantive os enums que o Pedro criou e estendi o uso: o método `cadastrarEbook` do `Bibliotecario` recebia `categoria: String` mesmo com o enum `Categoria` existindo. Um enum só protege de valor inválido se ele for usado na assinatura.
+
+Sobre o projeto Java: criei também as classes do lado do aluno (`Usuario`, `Aluno`, `Estante`, `Disciplina`) porque sem elas o projeto não compila, e um `src/` que não compila não serve para a Sprint 3. Segui exatamente a modelagem do Pedro, sem alterar nada, e marquei cada uma dessas classes com um comentário indicando que a modelagem é dele. A implementação delas na Sprint 3 continua sendo responsabilidade dele.
+
+### Pontos a alinhar com o Pedro
+
+A associação `Estante o-- Ebook` está com multiplicidade `0..6`, o que garante o teto mas não expressa a divisão de 4 obrigatórios e 2 livres. Dá para separar em duas associações, `0..4` e `0..2`. É modelagem dele, então não mexi, mas acho que vale a mudança.
+
+### Nota de transparência sobre uso de IA
+
+Usei o Claude, da Anthropic, como apoio nesta semana. A ferramenta me ajudou a analisar o diagrama entregue pelo Pedro e apontar as inconsistências, a escrever o código das classes Java e a revisar a redação deste documento. A decisão de assumir o bloco do acervo, o caminho para desfazer a God Class e a distribuição de cada responsabilidade entre as classes foram discutidos e decididos por mim, e sei explicar cada um deles.
