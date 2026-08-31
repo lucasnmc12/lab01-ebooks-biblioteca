@@ -20,16 +20,49 @@ public class Aluno extends Usuario {
         this.estantePessoal = new Estante();
     }
 
+    /** Recria um aluno lido do arquivo, cuja senha ja esta em forma de hash. */
+    public static Aluno comSenhaHash(String id, String nome, String senhaHash, String matricula) {
+        Aluno aluno = new Aluno(id, nome, "", matricula);
+        aluno.definirSenhaHash(senhaHash);
+        return aluno;
+    }
+
+    /**
+     * Adiciona o eBook a estante ocupando uma licenca de uso. O titulo
+     * entra como leitura obrigatoria quando alguma disciplina em curso o
+     * indica, e como leitura livre caso contrario.
+     */
     public void adicionarEbookNaEstante(Ebook ebook) {
-        // TODO: implementar na Sprint 3
+        if (!ebook.estaDisponivel()) {
+            throw new IllegalStateException(
+                    "O eBook \"" + ebook.getTitulo() + "\" atingiu o limite de acessos simultaneos");
+        }
+        if (ehLeituraObrigatoria(ebook)) {
+            estantePessoal.adicionarEbookObrigatorio(ebook);
+        } else {
+            estantePessoal.adicionarEbookLivre(ebook);
+        }
+        ebook.getLicenca().adicionarAcesso();
     }
 
     public void removerEbookDaEstante(Ebook ebook) {
-        // TODO: implementar na Sprint 3
+        estantePessoal.removerEbook(ebook);
+        ebook.getLicenca().liberarAcesso();
     }
 
-    public void consultarEstante() {
-        // TODO: implementar na Sprint 3
+    public List<Ebook> consultarEstante() {
+        return estantePessoal.listarEbooksNaEstante();
+    }
+
+    /** Verdadeiro quando alguma disciplina em curso indica o titulo. */
+    public boolean ehLeituraObrigatoria(Ebook ebook) {
+        return disciplinasEmCurso.stream().anyMatch(disciplina -> disciplina.indica(ebook));
+    }
+
+    public void matricularEm(Disciplina disciplina) {
+        if (!disciplinasEmCurso.contains(disciplina)) {
+            disciplinasEmCurso.add(disciplina);
+        }
     }
 
     public String getMatricula() {
@@ -41,6 +74,6 @@ public class Aluno extends Usuario {
     }
 
     public List<Disciplina> getDisciplinasEmCurso() {
-        return disciplinasEmCurso;
+        return new ArrayList<>(disciplinasEmCurso);
     }
 }

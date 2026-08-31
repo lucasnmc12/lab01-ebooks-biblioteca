@@ -25,6 +25,20 @@ Os bibliotecários também consultam quais alunos estão com um determinado eBoo
 
 ![Diagrama de casos de uso](docs/diagramas/casos-de-uso.png)
 
+## Como executar o protótipo
+
+Requer um JDK instalado (o projeto usa `java.time` e `HexFormat`, disponíveis a partir do Java 17).
+
+```bash
+mkdir -p bin
+javac -d bin $(find src -name "*.java")
+java -cp bin br.edu.pucminas.biblioteca.MenuPrincipal
+```
+
+Na primeira execução o sistema cria dados fictícios de demonstração e informa as credenciais no terminal: o bibliotecário é `bib1` / `biblioteca123` e os alunos são `ana`, `bruno` e `carla`, todos com senha `aluno123`.
+
+Os dados são gravados em arquivos de texto dentro de `dados/`, criada automaticamente e fora do controle de versão.
+
 ## Integrantes e distribuição de tarefas
 
 ### Sprint 1 (Lab01S01)
@@ -44,4 +58,9 @@ docs/
 ├── historias-de-usuario.md
 ├── contribuicoes/        registro semanal de cada integrante
 └── sprints/              roteiros das sprints
+
+src/br/edu/pucminas/biblioteca/
+├── modelo/               classes de domínio e suas regras de negócio
+├── persistencia/         leitura e gravação dos arquivos de dados
+└── MenuPrincipal.java    interface de linha de comando
 ```

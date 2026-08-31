@@ -21,15 +21,25 @@ public class Disciplina {
     }
 
     public void adicionarEbookIndicado(Ebook ebook) {
-        // TODO: implementar na Sprint 3
+        if (!ebooksIndicados.contains(ebook)) {
+            ebooksIndicados.add(ebook);
+        }
     }
 
     public void removerEbookIndicado(Ebook ebook) {
-        // TODO: implementar na Sprint 3
+        ebooksIndicados.remove(ebook);
+    }
+
+    public boolean indica(Ebook ebook) {
+        return ebooksIndicados.contains(ebook);
     }
 
     public List<Ebook> getEbooksIndicados() {
-        return ebooksIndicados;
+        return new ArrayList<>(ebooksIndicados);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getNome() {

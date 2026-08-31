@@ -21,17 +21,31 @@ public class Licenca {
         return acessosAtivos < limiteAcessosSimultaneos;
     }
 
+    /**
+     * Ocupa uma licenca. Devolve false quando o titulo ja atingiu o
+     * limite de acessos simultaneos.
+     */
     public boolean adicionarAcesso() {
-        // TODO: implementar na Sprint 3
-        return false;
+        if (!estaDisponivel()) {
+            return false;
+        }
+        acessosAtivos++;
+        return true;
     }
 
     public void liberarAcesso() {
-        // TODO: implementar na Sprint 3
+        if (acessosAtivos > 0) {
+            acessosAtivos--;
+        }
     }
 
     public void definirLimiteAcessos(int limite) {
         validarLimite(limite);
+        if (limite < acessosAtivos) {
+            throw new IllegalArgumentException(
+                    "O novo limite (" + limite + ") e menor que os "
+                            + acessosAtivos + " acessos em uso");
+        }
         this.limiteAcessosSimultaneos = limite;
     }
 

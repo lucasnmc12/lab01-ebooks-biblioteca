@@ -11,6 +11,11 @@
 '                        PeriodoAcesso, CalendarioAcademico,
 '                        RegistroDeUso, AdicaoEbook e os enums
 '                        (agregacao do acervo)
+'
+' Atualizado na Sprint 3 para refletir o codigo implementado.
+' Por convencao, getters e setters nao aparecem no diagrama, assim como
+' os metodos restaurar*, usados apenas pela camada de persistencia para
+' reconstruir objetos lidos dos arquivos.
 ' ---------------------------------------------------------------
 
 skinparam shadowing false
@@ -20,8 +25,9 @@ skinparam shadowing false
 abstract class Usuario {
     -id: String
     -nome: String
-    -senha: String
+    -senhaHash: String
     +autenticarUsuario(senhaDigitada: String): boolean
+    +{static} gerarHash(senha: String): String
 }
 
 ' ======================= ESTANTE DO ALUNO =======================
@@ -32,7 +38,9 @@ class Aluno {
     -estantePessoal: Estante
     +adicionarEbookNaEstante(ebook: Ebook): void
     +removerEbookDaEstante(ebook: Ebook): void
-    +consultarEstante(): void
+    +consultarEstante(): List<Ebook>
+    +ehLeituraObrigatoria(ebook: Ebook): boolean
+    +matricularEm(disciplina: Disciplina): void
 }
 
 class Estante {
@@ -42,6 +50,8 @@ class Estante {
     +adicionarEbookLivre(ebook: Ebook): void
     +removerEbook(ebook: Ebook): void
     +listarEbooksNaEstante(): List<Ebook>
+    +contarEbooks(): int
+    +contem(ebook: Ebook): boolean
 }
 
 class Disciplina {
@@ -50,17 +60,18 @@ class Disciplina {
     -ebooksIndicados: List<Ebook>
     +adicionarEbookIndicado(ebook: Ebook): void
     +removerEbookIndicado(ebook: Ebook): void
+    +indica(ebook: Ebook): boolean
 }
 
 ' ======================= GESTAO DO ACERVO =======================
 
 class Bibliotecario {
     -registroFuncional: String
-    +cadastrarEbook(titulo: String, editora: String, formato: FormatoArquivo, categoria: Categoria): Ebook
+    +cadastrarEbook(catalogo: Catalogo, titulo: String, editora: String, formato: FormatoArquivo, categoria: Categoria, limiteAcessos: int): Ebook
     +definirLicenca(ebook: Ebook, limite: int): void
-    +consultarAlunosComEbook(ebook: Ebook): List<Aluno>
-    +abrirPeriodoAcesso(inicio: LocalDate, fim: LocalDate): PeriodoAcesso
-    +encerrarPeriodoAcesso(periodo: PeriodoAcesso): void
+    +consultarAlunosComEbook(registro: RegistroDeUso, ebook: Ebook): List<Aluno>
+    +abrirPeriodoAcesso(calendario: CalendarioAcademico, inicio: LocalDate, fim: LocalDate): PeriodoAcesso
+    +encerrarPeriodoAcesso(calendario: CalendarioAcademico): void
 }
 
 class Ebook {
@@ -73,6 +84,7 @@ class Ebook {
     -statusRenovacao: StatusRenovacao
     +estaDisponivel(): boolean
     +marcarRenovacao(status: StatusRenovacao): void
+    +equals(outro: Object): boolean
 }
 
 class Licenca {
@@ -92,15 +104,20 @@ class Catalogo {
     +adicionarEbook(ebook: Ebook): void
     +removerEbook(ebook: Ebook): void
     +listarEbooks(): List<Ebook>
+    +buscarPorId(id: String): Ebook
+    +buscarPorTitulo(trecho: String): List<Ebook>
+    +proximoId(): String
     +avaliarRenovacao(periodo: PeriodoAcesso, registro: RegistroDeUso): void
-    +removerNaoRenovados(): void
+    +removerNaoRenovados(): List<Ebook>
 }
 
 class PeriodoAcesso {
     -inicio: LocalDate
     -fim: LocalDate
+    -encerrado: boolean
     +estaAberto(data: LocalDate): boolean
     +encerrar(): void
+    +estaEncerrado(): boolean
 }
 
 ' Guarda os periodos do semestre e garante que so um fique aberto.
@@ -154,6 +171,30 @@ enum StatusRenovacao {
     NAO_RENOVAR
 }
 
+' ============ INTERFACE E PERSISTENCIA (Sprint 3) ===============
+' Estas classes nao guardam regra de negocio: a interface le a entrada
+' e exibe o resultado, a persistencia grava e le os arquivos de texto.
+' Sao mostradas sem detalhe de metodos, para nao competir com o dominio.
+
+package "interface" <<Rectangle>> {
+    class MenuPrincipal
+    class MenuAluno
+    class MenuBibliotecario
+    class Console
+    class Biblioteca
+    class DadosIniciais
+}
+
+package "persistencia" <<Rectangle>> {
+    class ArquivoDados
+    class EbookRepositorioArquivo
+    class UsuarioRepositorioArquivo
+    class EstanteRepositorioArquivo
+    class PeriodoAcessoRepositorioArquivo
+    class RegistroDeUsoRepositorioArquivo
+    class DisciplinaRepositorioArquivo
+}
+
 ' ========================= RELACIONAMENTOS ======================
 
 Usuario <|-- Aluno
@@ -183,5 +224,31 @@ AdicaoEbook "0..*" --> "1" PeriodoAcesso
 
 Catalogo ..> RegistroDeUso : consulta na renovação
 RegistroDeUso ..> SistemaEstatisticasUso : <<notifica>>
+
+MenuPrincipal --> Biblioteca
+MenuPrincipal ..> MenuAluno
+MenuPrincipal ..> MenuBibliotecario
+MenuPrincipal ..> DadosIniciais
+MenuAluno --> Console
+MenuBibliotecario --> Console
+MenuAluno ..> Aluno
+MenuBibliotecario ..> Bibliotecario
+
+Biblioteca --> Catalogo
+Biblioteca --> CalendarioAcademico
+Biblioteca --> RegistroDeUso
+Biblioteca ..> EbookRepositorioArquivo
+Biblioteca ..> UsuarioRepositorioArquivo
+Biblioteca ..> EstanteRepositorioArquivo
+Biblioteca ..> PeriodoAcessoRepositorioArquivo
+Biblioteca ..> RegistroDeUsoRepositorioArquivo
+Biblioteca ..> DisciplinaRepositorioArquivo
+
+EbookRepositorioArquivo ..> ArquivoDados
+UsuarioRepositorioArquivo ..> ArquivoDados
+EstanteRepositorioArquivo ..> ArquivoDados
+PeriodoAcessoRepositorioArquivo ..> ArquivoDados
+RegistroDeUsoRepositorioArquivo ..> ArquivoDados
+DisciplinaRepositorioArquivo ..> ArquivoDados
 
 @enduml

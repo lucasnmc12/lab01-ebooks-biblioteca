@@ -7,6 +7,7 @@ public class PeriodoAcesso {
 
     private LocalDate inicio;
     private LocalDate fim;
+    private boolean encerrado;
 
     public PeriodoAcesso(LocalDate inicio, LocalDate fim) {
         if (inicio == null || fim == null || !fim.isAfter(inicio)) {
@@ -14,14 +15,24 @@ public class PeriodoAcesso {
         }
         this.inicio = inicio;
         this.fim = fim;
+        this.encerrado = false;
     }
 
     public boolean estaAberto(LocalDate data) {
-        return !data.isBefore(inicio) && !data.isAfter(fim);
+        return !encerrado && !data.isBefore(inicio) && !data.isAfter(fim);
     }
 
     public void encerrar() {
-        // TODO: implementar na Sprint 3
+        this.encerrado = true;
+    }
+
+    public boolean estaEncerrado() {
+        return encerrado;
+    }
+
+    /** Usado pela persistencia para restaurar um periodo ja encerrado. */
+    public void restaurarEncerrado(boolean encerrado) {
+        this.encerrado = encerrado;
     }
 
     public LocalDate getInicio() {
@@ -30,5 +41,10 @@ public class PeriodoAcesso {
 
     public LocalDate getFim() {
         return fim;
+    }
+
+    @Override
+    public String toString() {
+        return inicio + " a " + fim + (encerrado ? " (encerrado)" : " (aberto)");
     }
 }

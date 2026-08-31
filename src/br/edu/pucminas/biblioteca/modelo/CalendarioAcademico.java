@@ -13,25 +13,48 @@ public class CalendarioAcademico {
     private List<PeriodoAcesso> periodos = new ArrayList<>();
 
     public PeriodoAcesso abrirPeriodo(LocalDate inicio, LocalDate fim) {
-        // TODO: implementar na Sprint 3
-        return null;
+        if (periodoAberto() != null) {
+            throw new IllegalStateException(
+                    "Ja existe um periodo de acesso aberto; encerre-o antes de abrir outro");
+        }
+        PeriodoAcesso periodo = new PeriodoAcesso(inicio, fim);
+        periodos.add(periodo);
+        return periodo;
     }
 
     public void encerrarPeriodoAberto() {
-        // TODO: implementar na Sprint 3
+        PeriodoAcesso aberto = periodoAberto();
+        if (aberto == null) {
+            throw new IllegalStateException("Nao ha periodo de acesso aberto");
+        }
+        aberto.encerrar();
     }
 
+    /** Periodo vigente hoje, ou null quando nao ha nenhum aberto. */
     public PeriodoAcesso periodoAberto() {
-        // TODO: implementar na Sprint 3
+        LocalDate hoje = LocalDate.now();
+        for (PeriodoAcesso periodo : periodos) {
+            if (periodo.estaAberto(hoje)) {
+                return periodo;
+            }
+        }
         return null;
     }
 
     public boolean existePeriodoAberto(LocalDate data) {
-        // TODO: implementar na Sprint 3
+        for (PeriodoAcesso periodo : periodos) {
+            if (periodo.estaAberto(data)) {
+                return true;
+            }
+        }
         return false;
     }
 
+    public void restaurarPeriodo(PeriodoAcesso periodo) {
+        periodos.add(periodo);
+    }
+
     public List<PeriodoAcesso> getPeriodos() {
-        return periodos;
+        return new ArrayList<>(periodos);
     }
 }

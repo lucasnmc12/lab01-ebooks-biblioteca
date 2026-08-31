@@ -18,20 +18,56 @@ public class Estante {
     private List<Ebook> ebooksLivres = new ArrayList<>();
 
     public void adicionarEbookObrigatorio(Ebook ebook) {
-        // TODO: implementar na Sprint 3
+        validarNaoRepetido(ebook);
+        if (ebooksObrigatorios.size() >= LIMITE_OBRIGATORIOS) {
+            throw new IllegalStateException(
+                    "A estante ja tem os " + LIMITE_OBRIGATORIOS + " eBooks de leitura obrigatoria");
+        }
+        ebooksObrigatorios.add(ebook);
     }
 
     public void adicionarEbookLivre(Ebook ebook) {
-        // TODO: implementar na Sprint 3
+        validarNaoRepetido(ebook);
+        if (ebooksLivres.size() >= LIMITE_LIVRES) {
+            throw new IllegalStateException(
+                    "A estante ja tem os " + LIMITE_LIVRES + " eBooks de leitura livre");
+        }
+        ebooksLivres.add(ebook);
     }
 
     public void removerEbook(Ebook ebook) {
-        // TODO: implementar na Sprint 3
+        boolean removido = ebooksObrigatorios.remove(ebook) || ebooksLivres.remove(ebook);
+        if (!removido) {
+            throw new IllegalStateException("O eBook \"" + ebook.getTitulo() + "\" nao esta na estante");
+        }
     }
 
     public List<Ebook> listarEbooksNaEstante() {
         List<Ebook> todos = new ArrayList<>(ebooksObrigatorios);
         todos.addAll(ebooksLivres);
         return todos;
+    }
+
+    public int contarEbooks() {
+        return ebooksObrigatorios.size() + ebooksLivres.size();
+    }
+
+    public boolean contem(Ebook ebook) {
+        return ebooksObrigatorios.contains(ebook) || ebooksLivres.contains(ebook);
+    }
+
+    public List<Ebook> getEbooksObrigatorios() {
+        return new ArrayList<>(ebooksObrigatorios);
+    }
+
+    public List<Ebook> getEbooksLivres() {
+        return new ArrayList<>(ebooksLivres);
+    }
+
+    private void validarNaoRepetido(Ebook ebook) {
+        if (contem(ebook)) {
+            throw new IllegalStateException(
+                    "O eBook \"" + ebook.getTitulo() + "\" ja esta na estante");
+        }
     }
 }
